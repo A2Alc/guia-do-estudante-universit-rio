@@ -34,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* SIDEBAR */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--sidebar-bg);
@@ -113,7 +112,6 @@
         .nav-btn:hover, .nav-btn.active { background: var(--primary); color: white; }
         .nav-btn i { font-size: 1.1rem; width: 20px; text-align: center; }
 
-        /* MAIN CONTENT */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -130,7 +128,6 @@
 
         h2 { font-weight: 700; color: var(--text-main); margin-bottom: 25px; font-size: 1.8rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; }
 
-        /* CARDS & GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
         
         .card {
@@ -146,7 +143,6 @@
         .stat-value { font-size: 2.2rem; font-weight: 700; color: var(--primary); }
         .stat-sub { font-size: 0.8rem; color: var(--secondary); }
 
-        /* FORMS & TABLES */
         input, select, textarea {
             width: 100%;
             padding: 10px;
@@ -169,7 +165,6 @@
         .btn-neutral { background: var(--neutral); color: white; }
         .btn:hover { filter: brightness(90%); }
 
-        /* CALENDAR / GRADE */
         .calendar-wrapper { overflow-x: auto; }
         .calendar-table { min-width: 800px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
         .calendar-table th { text-align: center; background: var(--primary); color: white; padding: 10px; border: 1px solid #e5e7eb; width: 14%; }
@@ -205,7 +200,6 @@
         .slot-title { font-weight: 700; color: white; margin-bottom: 4px; line-height: 1.2; }
         .slot-type { font-size: 0.7rem; color: rgba(255,255,255,0.9); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Estilos de Tabela Avançados (Matriz) */
         .term-header {
             background: #e5e7eb;
             color: var(--text-main);
@@ -228,7 +222,6 @@
             margin: 0;
         }
 
-        /* ATTENDANCE BADGES */
         .att-badge { width: 35px; height: 35px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
         .att-p { background: #d1fae5; color: #065f46; }
         .att-p.selected { border-color: #065f46; box-shadow: 0 0 0 2px #d1fae5; transform: scale(1.1); }
@@ -239,7 +232,6 @@
         .att-sa { background: #f3f4f6; color: #9ca3af; border: 1px dashed #d1d5db;}
         .att-sa.selected { border-color: #6b7280; transform: scale(1.1); }
 
-        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
         .modal-content { background: white; padding: 30px; border-radius: 16px; width: 550px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
@@ -258,6 +250,7 @@
         
         <div class="nav-label">Acadêmico</div>
         <button class="nav-btn" onclick="showSection('ucs')"><i class="fas fa-book"></i> <span>Matriz Curricular</span></button>
+        <button class="nav-btn" onclick="showSection('pathway')"><i class="fas fa-route"></i> <span>Minha Trajetória</span></button>
         <button class="nav-btn" onclick="showSection('extras')"><i class="fas fa-star"></i> <span>Extracurriculares</span></button>
         <button class="nav-btn" onclick="showSection('week')"><i class="fas fa-calendar-alt"></i> <span>Semana Padrão</span></button>
         <button class="nav-btn" onclick="showSection('attendance')"><i class="fas fa-user-check"></i> <span>Controle de Faltas</span></button>
@@ -343,14 +336,33 @@
             <div class="card">
                 <div style="display:flex; gap:10px; margin-bottom:15px;">
                     <input type="text" id="searchUC" placeholder="Buscar matéria..." onkeyup="renderUCTable()" style="margin:0;">
-                    <select id="filterStatus" onchange="renderUCTable()" style="margin:0; width:200px;">
+                </div>
+                <table id="uc-table">
+                    <thead>
+                        <tr><th>Nome</th><th>Tipo</th><th>Horas</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="pathway" class="section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2>Minha Trajetória</h2>
+                <button class="btn btn-primary" onclick="openUCModal('Pathway')">+ Nova Matéria</button>
+            </div>
+
+            <div class="card">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <input type="text" id="searchPathway" placeholder="Buscar matéria..." onkeyup="renderPathwayTable()" style="margin:0;">
+                    <select id="filterStatusPathway" onchange="renderPathwayTable()" style="margin:0; width:200px;">
                         <option value="all">Todos</option>
                         <option value="Pendente">Pendente</option>
                         <option value="Em andamento">Em andamento</option>
                         <option value="Concluido">Concluído</option>
                     </select>
                 </div>
-                <table id="uc-table">
+                <table id="pathway-table">
                     <thead>
                         <tr><th>Nome</th><th>Tipo</th><th>Horas</th><th>Status</th><th>Ações</th></tr>
                     </thead>
@@ -507,7 +519,7 @@
             
             <label>Horas:</label><input type="number" id="modal-hours">
             
-            <label>Status:</label>
+            <label id="lbl-status">Status:</label>
             <select id="modal-status">
                 <option value="Pendente">Pendente</option>
                 <option value="Em andamento">Em andamento</option>
@@ -577,7 +589,6 @@
     </div>
 
     <script>
-        // --- DATA STRUCTURE ---
         let appData = {
             config: {
                 hoursObg: 1500, hoursElec: 800, hoursExtra: 220, passingGrade: 6.0,
@@ -585,19 +596,19 @@
                 rotStart: 6, rotEnd: 23, rotStep: 60
             },
             ucs: [], 
+            pathway: [],
             extras: [],
-            attendance: [], // {id, name, totalHours, dates: [{date, status}]}
+            attendance: [],
             calendarAcademic: {}, 
             calendarRoutine: {}
         };
 
-        // --- INIT ---
         window.onload = function() {
             const saved = localStorage.getItem('myAcademicData');
             if(saved) {
                 appData = JSON.parse(saved);
                 if(!appData.attendance) appData.attendance = [];
-                // Revertendo para calendarios (caso tenha salvo como docs)
+                if(!appData.pathway) appData.pathway = [];
                 if(!appData.calendarAcademic) appData.calendarAcademic = {};
                 if(!appData.calendarRoutine) appData.calendarRoutine = {};
                 populateConfigInputs();
@@ -608,6 +619,7 @@
         function refreshAll() {
             renderDashboard();
             renderUCTable();
+            renderPathwayTable();
             renderExtraTable();
             renderAttendanceList();
             renderGrid('academic');
@@ -630,8 +642,6 @@
             if(id === 'routine') renderGrid('routine');
         }
 
-        // --- GRID RENDERER (ROBUST VERSION) ---
-        // Generates a color based on string hash
         function stringToColor(str) {
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
@@ -661,9 +671,7 @@
             const step = config.step;
             const totalSlots = Math.floor((endMin - startMin) / step);
             
-            // Occupied Matrix: [DayIndex][SlotIndex] = true/false
-            // Academic Days: 1-6 (Mon-Sat), Routine: 0-6 (Sun-Sat)
-            let occupiedMatrix = {}; // key: "day-slotIndex"
+            let occupiedMatrix = {};
 
             let slotIndex = 0;
             for(let time = startMin; time < endMin; time += step) {
@@ -680,7 +688,6 @@
                 for(let d = startDay; d <= endDay; d++) {
                     const matrixKey = `${d}-${slotIndex}`;
                     
-                    // If occupied by a previous rowspan, SKIP
                     if(occupiedMatrix[matrixKey]) continue;
 
                     const dataKey = `${d}-${hour}-${min}`;
@@ -689,19 +696,16 @@
                     let cellHtml = '';
                     
                     if(slotData) {
-                        // Clamp rowspan to prevent overflow
                         let requestedBlocks = slotData.blocks || 1;
                         if (slotIndex + requestedBlocks > totalSlots) {
                             requestedBlocks = totalSlots - slotIndex;
                         }
                         rowSpan = requestedBlocks;
                         
-                        // Mark future slots
                         for(let r = 1; r < rowSpan; r++) {
                             occupiedMatrix[`${d}-${slotIndex + r}`] = true;
                         }
 
-                        // Colors
                         let bgColor = stringToColor(slotData.name);
                         
                         const typeLabel = slotData.type === 'Obrigatória' ? 'Obrigatória' : (slotData.type === 'Eletiva' ? 'Eletiva' : '');
@@ -732,12 +736,11 @@
             const current = dataStore[key] || {};
             
             const name = prompt("Nome da Atividade/Matéria (Deixe vazio para limpar):", current.name || "");
-            if(name === null) return; // Cancelar
+            if(name === null) return;
 
             if(name.trim() === '') {
                 delete dataStore[key];
             } else {
-                // Configuração detalhada
                 let blocks = prompt("Duração em Horas (apenas números, ex: 2 ou 4):", current.blocks || 1);
                 blocks = parseInt(blocks);
                 if(isNaN(blocks) || blocks < 1) blocks = 1;
@@ -760,7 +763,6 @@
             refreshAll();
         }
 
-        // --- ATTENDANCE SYSTEM ---
         function openAttModal() { document.getElementById('attModal').style.display = 'flex'; }
         
         function createAttendance() {
@@ -787,7 +789,7 @@
                 if(selectedDays.includes(current.getDay())) {
                     datesList.push({
                         date: current.toLocaleDateString('pt-BR'),
-                        status: 'EP' // Padrão EP (Em Progresso)
+                        status: 'EP'
                     });
                 }
                 current.setDate(current.getDate() + 1);
@@ -819,13 +821,9 @@
                     }
                 });
 
-                // Calculando a porcentagem baseada apenas nas faltas reais, para que 'EP' não penalize
                 let perc = total === 0 ? 0 : (((total - absences)/total)*100).toFixed(1);
                 let color = perc >= 75 ? 'var(--secondary)' : 'var(--danger)';
                 
-                // Logic for "Max Misses"
-                // Assuming all classes have equal weight
-                // Max misses = 25% of total classes.
                 const maxMisses = Math.floor(total * 0.25);
                 const currentMisses = absences;
 
@@ -893,7 +891,6 @@
             }
         }
 
-        // --- UCs & EXTRAS ---
         function openUCModal(context) {
             document.getElementById('ucModal').style.display = 'flex';
             document.getElementById('modal-id').value = '';
@@ -906,6 +903,8 @@
             const catSelect = document.getElementById('modal-category');
             const groupDiv = document.getElementById('extra-group-container');
             const termDiv = document.getElementById('term-container');
+            const statusLbl = document.getElementById('lbl-status');
+            const statusSel = document.getElementById('modal-status');
 
             if(context === 'Extra') {
                 document.getElementById('modal-title').innerText = 'Nova Atividade Extracurricular';
@@ -913,26 +912,55 @@
                 document.getElementById('lbl-cat').style.display = 'none';
                 termDiv.style.display = 'none';
                 groupDiv.style.display = 'block';
+                statusLbl.style.display = 'block';
+                statusSel.style.display = 'block';
+            } else if(context === 'Pathway') {
+                document.getElementById('modal-title').innerText = 'Nova Trajetória';
+                catSelect.style.display = 'block';
+                document.getElementById('lbl-cat').style.display = 'block';
+                termDiv.style.display = 'block';
+                groupDiv.style.display = 'none';
+                statusLbl.style.display = 'block';
+                statusSel.style.display = 'block';
             } else {
                 document.getElementById('modal-title').innerText = 'Nova Matéria';
                 catSelect.style.display = 'block';
                 document.getElementById('lbl-cat').style.display = 'block';
                 termDiv.style.display = 'block';
                 groupDiv.style.display = 'none';
+                statusLbl.style.display = 'none';
+                statusSel.style.display = 'none';
             }
         }
 
-        function editUC(id) {
-            const uc = appData.ucs.find(u => u.id === id);
-            if(!uc) return;
-            openUCModal('General');
-            document.getElementById('modal-id').value = uc.id;
-            document.getElementById('modal-name').value = uc.name;
-            document.getElementById('modal-category').value = uc.type;
-            document.getElementById('modal-hours').value = uc.hours;
-            document.getElementById('modal-status').value = uc.status;
-            document.getElementById('modal-term').value = uc.term || '';
-            document.getElementById('modal-title').innerText = 'Editar Matéria';
+        function editItem(arrName, id) {
+            const item = appData[arrName].find(u => u.id === id);
+            if(!item) return;
+            
+            let context = 'General';
+            if(arrName === 'pathway') context = 'Pathway';
+            if(arrName === 'extras') context = 'Extra';
+
+            openUCModal(context);
+            
+            document.getElementById('modal-id').value = item.id;
+            document.getElementById('modal-name').value = item.name;
+            document.getElementById('modal-hours').value = item.hours;
+            
+            if(context === 'Extra') {
+                document.getElementById('modal-group').value = item.group;
+                document.getElementById('modal-status').value = item.status;
+                document.getElementById('modal-title').innerText = 'Editar Atividade';
+            } else {
+                document.getElementById('modal-category').value = item.type;
+                document.getElementById('modal-term').value = item.term || '';
+                if(context === 'Pathway') {
+                    document.getElementById('modal-status').value = item.status;
+                    document.getElementById('modal-title').innerText = 'Editar Trajetória';
+                } else {
+                    document.getElementById('modal-title').innerText = 'Editar Matéria';
+                }
+            }
         }
 
         function quickUpdateStatus(arrName, id, newStatus) {
@@ -955,9 +983,12 @@
             const newItem = {
                 id: id ? parseInt(id) : Date.now(),
                 name: document.getElementById('modal-name').value,
-                hours: parseInt(document.getElementById('modal-hours').value) || 0,
-                status: document.getElementById('modal-status').value
+                hours: parseInt(document.getElementById('modal-hours').value) || 0
             };
+
+            if(context === 'Extra' || context === 'Pathway') {
+                newItem.status = document.getElementById('modal-status').value;
+            }
 
             if(context === 'Extra') {
                 newItem.group = document.getElementById('modal-group').value;
@@ -965,6 +996,13 @@
                     const idx = appData.extras.findIndex(x => x.id == id);
                     appData.extras[idx] = newItem;
                 } else { appData.extras.push(newItem); }
+            } else if(context === 'Pathway') {
+                newItem.type = document.getElementById('modal-category').value;
+                newItem.term = document.getElementById('modal-term').value;
+                if(id) {
+                    const idx = appData.pathway.findIndex(x => x.id == id);
+                    appData.pathway[idx] = newItem;
+                } else { appData.pathway.push(newItem); }
             } else {
                 newItem.type = document.getElementById('modal-category').value;
                 newItem.term = document.getElementById('modal-term').value;
@@ -973,6 +1011,7 @@
                     appData.ucs[idx] = newItem;
                 } else { appData.ucs.push(newItem); }
             }
+            
             document.getElementById('ucModal').style.display = 'none';
             refreshAll();
         }
@@ -981,11 +1020,46 @@
             const tbody = document.querySelector('#uc-table tbody');
             tbody.innerHTML = '';
             const filterTxt = document.getElementById('searchUC').value.toLowerCase();
-            const filterStat = document.getElementById('filterStatus').value;
 
-            // Group by Term
             const grouped = {};
             appData.ucs.forEach(uc => {
+                if(!uc.name.toLowerCase().includes(filterTxt)) return;
+                const term = uc.term || 'Outros';
+                if(!grouped[term]) grouped[term] = [];
+                grouped[term].push(uc);
+            });
+
+            const terms = Object.keys(grouped).sort();
+
+            terms.forEach(term => {
+                const trHeader = document.createElement('tr');
+                trHeader.innerHTML = `<td colspan="4" class="term-header">${term}</td>`;
+                tbody.appendChild(trHeader);
+
+                grouped[term].forEach(uc => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${uc.name}</td>
+                        <td>${uc.type}</td>
+                        <td>${uc.hours}h</td>
+                        <td>
+                            <button onclick="editItem('ucs', ${uc.id})" class="btn-primary" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem('ucs', ${uc.id})" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function renderPathwayTable() {
+            const tbody = document.querySelector('#pathway-table tbody');
+            tbody.innerHTML = '';
+            const filterTxt = document.getElementById('searchPathway').value.toLowerCase();
+            const filterStat = document.getElementById('filterStatusPathway').value;
+
+            const grouped = {};
+            appData.pathway.forEach(uc => {
                 if(filterStat !== 'all' && uc.status !== filterStat) return;
                 if(!uc.name.toLowerCase().includes(filterTxt)) return;
                 const term = uc.term || 'Outros';
@@ -1011,15 +1085,15 @@
                         <td>${uc.type}</td>
                         <td>${uc.hours}h</td>
                         <td>
-                            <select class="quick-select" onchange="quickUpdateStatus('ucs', ${uc.id}, this.value)" style="background:${getStatusColorJS(uc.status)}">
+                            <select class="quick-select" onchange="quickUpdateStatus('pathway', ${uc.id}, this.value)" style="background:${getStatusColorJS(uc.status)}">
                                 <option value="Pendente" ${selPendente}>Pendente</option>
                                 <option value="Em andamento" ${selAndamento}>Em andamento</option>
                                 <option value="Concluido" ${selConcluido}>Concluído</option>
                             </select>
                         </td>
                         <td>
-                            <button onclick="editUC(${uc.id})" class="btn-primary" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteItem('ucs', ${uc.id})" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
+                            <button onclick="editItem('pathway', ${uc.id})" class="btn-primary" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem('pathway', ${uc.id})" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
                         </td>
                     `;
                     tbody.appendChild(tr);
@@ -1050,7 +1124,10 @@
                             <option value="Concluido" ${selConcluido}>Concluído</option>
                         </select>
                     </td>
-                    <td><button onclick="deleteItem('extras', ${ex.id})" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button></td>`;
+                    <td>
+                        <button onclick="editItem('extras', ${ex.id})" class="btn-primary" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteItem('extras', ${ex.id})" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
+                    </td>`;
                 tbody.appendChild(tr);
             });
             const list = document.getElementById('extra-summary-list');
@@ -1060,7 +1137,6 @@
 
         function deleteItem(arrName, id) { if(confirm('Tem certeza?')) { appData[arrName] = appData[arrName].filter(x => x.id !== id); refreshAll(); } }
 
-        // --- CONFIG & UTILS ---
         function populateConfigInputs() {
             document.getElementById('cfg-obg').value = appData.config.hoursObg;
             document.getElementById('cfg-elec').value = appData.config.hoursElec;
@@ -1156,11 +1232,10 @@
         }
         addCalcRow();
 
-        // DASHBOARD
         function renderDashboard() {
             const sumHours = (list, type) => list.filter(i => i.status === 'Concluido' && (type ? i.type === type : true)).reduce((acc, c) => acc + parseInt(c.hours), 0);
             const sumExtras = () => appData.extras.filter(i => i.status === 'Concluido').reduce((acc, c) => acc + parseInt(c.hours), 0);
-            const obgDone = sumHours(appData.ucs, 'Obrigatória'), elecDone = sumHours(appData.ucs, 'Eletiva'), extraDone = sumExtras();
+            const obgDone = sumHours(appData.pathway, 'Obrigatória'), elecDone = sumHours(appData.pathway, 'Eletiva'), extraDone = sumExtras();
             const obgTotal = appData.config.hoursObg, elecTotal = appData.config.hoursElec, extraTotal = appData.config.hoursExtra;
             const grandTotal = obgTotal + elecTotal + extraTotal, grandDone = obgDone + elecDone + extraDone;
 
