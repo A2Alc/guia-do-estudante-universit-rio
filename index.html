@@ -486,18 +486,7 @@
             
             <div id="term-container">
                 <label>Termo / Semestre:</label>
-                <select id="modal-term">
-                    <option value="1º Termo">1º Termo</option>
-                    <option value="2º Termo">2º Termo</option>
-                    <option value="3º Termo">3º Termo</option>
-                    <option value="4º Termo">4º Termo</option>
-                    <option value="5º Termo">5º Termo</option>
-                    <option value="6º Termo">6º Termo</option>
-                    <option value="7º Termo">7º Termo</option>
-                    <option value="8º Termo">8º Termo</option>
-                    <option value="Eletivas">Eletivas Gerais</option>
-                    <option value="Optativas">Optativas</option>
-                </select>
+                <input type="text" id="modal-term" placeholder="Ex: 1º Semestre, Nivelamento, Optativas...">
             </div>
 
             <label id="lbl-cat">Categoria:</label>
@@ -912,6 +901,7 @@
             document.getElementById('modal-name').value = '';
             document.getElementById('modal-hours').value = '';
             document.getElementById('modal-status').value = 'Pendente';
+            document.getElementById('modal-term').value = '';
             
             const catSelect = document.getElementById('modal-category');
             const groupDiv = document.getElementById('extra-group-container');
@@ -941,7 +931,7 @@
             document.getElementById('modal-category').value = uc.type;
             document.getElementById('modal-hours').value = uc.hours;
             document.getElementById('modal-status').value = uc.status;
-            document.getElementById('modal-term').value = uc.term || '1º Termo';
+            document.getElementById('modal-term').value = uc.term || '';
             document.getElementById('modal-title').innerText = 'Editar Matéria';
         }
 
